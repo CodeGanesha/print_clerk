@@ -7,7 +7,7 @@ require 'barby/barcode/ean_13'
 require 'barby/outputter/png_outputter'
 
 ProductsController.class_eval do
-  # loads of ways to create barcodes nowadays, this is a bit older. 
+  # loads of ways to create barcodes nowadays, this is a bit older.
   # Used to be html but moved to pdf for better layout control
   def barcode
     load_product
@@ -16,10 +16,13 @@ ProductsController.class_eval do
     if code.length == 12
       aBarcode =  ::Barby::EAN13.new( code )
     else
+      puts "Barcode utf   #{code}"
+      code = code.encode(Encoding::ASCII_8BIT, :invalid => :replace, :undef => :replace, :replace => '')
+      puts "Barcode ascii #{code}"
       aBarcode = ::Barby::Code128B.new( code  )
     end
     pdf = create_pdf
-    pdf.image( StringIO.new( aBarcode.to_png(:xdim => 5)) , :width => 50.mm , 
+    pdf.image( StringIO.new( aBarcode.to_png(:xdim => 5)) , :width => 50.mm ,
             :height => 10.mm , :at => [ 0 , 10.mm])
     send_data pdf.render , :type => "application/pdf" , :filename => "#{@product.full_name}.pdf"
   end
