@@ -6,7 +6,7 @@ gem "print_clerk" , :path => "../"
 
 gem 'sqlite3'
 
-#asset / production reelated
+#asset / production related
 gem "therubyracer"
 gem "libv8"
 gem "rb-readline"
